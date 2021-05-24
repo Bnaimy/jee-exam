@@ -6,3 +6,8 @@
   margin-right: auto;
   width:70px;
 }
+
+.i-am-centered-form
+{
+	margin: auto; max-width: 500px;
+}

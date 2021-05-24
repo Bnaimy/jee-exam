@@ -1,28 +1,21 @@
 <body>
 	<div th:replace="fragments/Navbar :: navbar"></div>
 	<div class="container my-5">
-		<h2 class="mb-5" style="display: flex; justify-content: center;">Update Patient</h2>
+		<h2 class="mb-5" style="display: flex; justify-content: center;">Ajouter Patient</h2>
 		<div class="row" style="display: flex; justify-content: center;">
 			<div class="col-md-6">
-				<form action="#" th:action="@{/updatePatient/{id}(id=${patient.id})}" th:object="${patient}" method="post">
+				<form action="#" th:action="@{/ajouterPatient}" method="post" th:object="${patient}" class="form">
 					<div class="row">
-						<div class="form-group col-md-6 align-self-center">
-							<label for="name" class="col-form-label">ID</label> <input
-								type="text" class="form-control" id="id"
-								name="id" th:value="${patient.id}" disabled />
-						</div>
 						<div class="form-group col-md-6 align-self-center">
 							<label for="name" class="col-form-label">Nom</label> <input
 								type="text" class="form-control" id="nom"
-								placeholder="Entrer un nom" name="nom" th:value="${patient.nom}" />
+								placeholder="Entrer un nom" name="nom"/>
 								<div class="alert alert-warning" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></div>
 						</div>
 						<div class="form-group col-md-6 align-self-center">
 							<label for="name" class="col-form-label">Date Naissance</label> <input
 								type="date" class="form-control" id="date_naissance"
 								placeholder="Entrer un date naissance" name="date_naissance"
-								th:field="${patient.date_naissance}"
-								th:value="${patient.date_naissance}"
 								 />
 								 <div class="alert alert-warning" th:if="${#fields.hasErrors('date_naissance')}" th:errors="*{date_naissance}"></div>
 						</div>
@@ -30,23 +23,20 @@
 							<label for="name" class="col-form-label">score</label> <input
 								type="number" class="form-control" id="score"
 								placeholder="Entrer un score" name="score"
-								th:value="${patient.score}" />
-								<div class="alert alert-warning" th:if="${#fields.hasErrors('score')}">entrer score valid</div>
+								 />
+								 <div class="alert alert-warning" th:if="${#fields.hasErrors('score')}">entrer score valid</div>
 						</div>
 						<div class="form-group col-md-6 align-self-center">
 						<label for="name" class="col-form-label">Malade ? </label>
 							<p data-th-utext="${#strings.replace(#strings.escapeXml(text),'&#10;','&lt;br&gt;')}"></p>
 						        <div class="custom-control custom-radio custom-control-inline">
-                					<input type="radio" id="malade" name="malade" class="custom-control-input" th:value="true" th:field="${patient.malade}">
+                					<input type="radio" id="malade" name="malade" class="custom-control-input" value="true">
                 					<label class="custom-control-label" for="malade">Malade</label>
             					</div>
             					<div class="custom-control custom-radio custom-control-inline">
-                					<input type="radio" id="nomalade" name="nomalade" class="custom-control-input" value="false" th:field="${patient.malade}">
+                					<input type="radio" id="nomalade" name="nomalade" class="custom-control-input" value="false">
                 					<label class="custom-control-label" for="nomalade">Non Malade</label>
             					</div>
-								<div>
-									<p th:if="${#fields.hasErrors('malade')}" th:errors="*{malade}" />
-								</div>
 						</div>
 					</div>
 					<div class="row">

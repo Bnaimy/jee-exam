@@ -1,16 +1,15 @@
 package com.controllers;
 import java.util.Optional;
-
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.entities.Patient;
@@ -27,7 +26,19 @@ public class PatientController {
     public  PatientController(PatientRepository patientrepository) {
         this.patientrepository = patientrepository;
     }
-    
+    @GetMapping("/ajouterPatient")
+    public String AjouterPatient(Patient patient)
+    {
+		return "AjouterPatient"; 	
+    }
+    @PostMapping("/ajouterPatient")
+    public String addPatient(@Valid Patient patient, BindingResult result, Model model) {
+    	if (result.hasErrors()) {
+            return "AjouterPatient";
+        } 
+        patientrepository.save(patient);
+        return "redirect:/patients";
+    }
     @GetMapping("/patients")
     public String getPatients(Model model, @RequestParam(name="page",defaultValue ="0")int page,
             @RequestParam(name="size",defaultValue ="3")int size,
@@ -56,7 +67,6 @@ public class PatientController {
     	Optional<Patient> patient = patientrepository.findById(id);
 		Patient P = new Patient();
 		if (patient.isPresent()) {
-			
 			P = patient.get();
 			model.addAttribute("patient",P);
 			return "editpage";
@@ -68,34 +78,17 @@ public class PatientController {
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 		}
-    	return "editPatient";
+    	return "editpage";
     }
-    @PutMapping("/editPatient")
-    public String modifier(@RequestBody @Validated Patient p ,@PathVariable("id") Long id)
-    
-    {
-    	try {
-    		Optional<Patient> patient = patientrepository.findById(id);
-    		Patient P = new Patient();
-    		if (patient.isPresent()) {
-    			
-    			P = patient.get();
-    			
-    		}
-    		else 
-    		{
-    			throw new NotFoundException("not found");
-    		}
-    		
-    		P.setDate_naissance(p.getDate_naissance());
-    		P.setMalade(p.getMalade());
-    		P.setNom(p.getNom());
-    		P.setScore(p.getScore());
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			 return "redirect:/patients";
-		}
-    	 return "redirect:/patients";
-    	}
-    
+    @PostMapping("/updatePatient/{id}")
+    public String updatePatient(@PathVariable("id") long id, @Valid Patient patient, BindingResult result, Model model) {
+    	System.out.println(patient.getMalade());
+    	System.out.println(patient.getDate_naissance());
+    	if (result.hasErrors()) {
+        	patient.setId(id);
+            return "editpage";
+        }
+        patientrepository.save(patient);
+        return "redirect:/patients";
+    }
 }
